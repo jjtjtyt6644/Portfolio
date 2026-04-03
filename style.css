@@ -816,3 +816,144 @@ a, button { text-decoration:none; font-family:inherit; cursor:pointer; }
   font-weight: 700; transition: all 0.3s;
 }
 .rate-limit-modal button:hover { background: #ef4444; color: #fff; }
+
+/* ─── Chat Rate Limit Overlay ─────────────────── */
+.chat-limit-overlay {
+  position: fixed; inset: 0; z-index: 3100;
+  background: rgba(7,9,15,0.85); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.4s;
+  padding: 2rem;
+}
+.chat-limit-overlay.open { opacity: 1; pointer-events: auto; }
+
+.chat-limit-modal {
+  background: #0e1220; border-radius: 24px;
+  padding: 3rem 2.5rem; max-width: 440px; text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  transform: scale(0.95) translateY(20px); transition: transform 0.4s var(--ease-out);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.chat-limit-overlay.open .chat-limit-modal { transform: scale(1) translateY(0); }
+
+/* State: Warning (Amber) */
+.chat-limit-modal.state-warning { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 40px rgba(245, 158, 11, 0.1); }
+.chat-limit-modal.state-warning h3 { color: #f59e0b; }
+.chat-limit-modal.state-warning button { border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.chat-limit-modal.state-warning button:hover { background: #f59e0b; color: #fff; }
+
+/* State: Blocked (Red) */
+.chat-limit-modal.state-blocked { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 40px rgba(239, 68, 68, 0.15); }
+.chat-limit-modal.state-blocked h3 { color: #ef4444; }
+.chat-limit-modal.state-blocked button { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.chat-limit-modal.state-blocked button:hover { background: #ef4444; color: #fff; }
+
+.chat-limit-modal h3 {
+  font-weight: 900; margin-bottom: 1.2rem;
+  font-size: 1.6rem; letter-spacing: -0.02em; text-transform: uppercase;
+}
+.chat-limit-modal p {
+  color: var(--muted); font-size: 1.05rem; line-height: 1.6;
+}
+.chat-limit-modal button {
+  margin-top: 2rem;
+  padding: 0.9rem 2.4rem; border-radius: 40px; cursor: pointer;
+  font-weight: 700; transition: all 0.3s;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI CHAT WINDOW
+═══════════════════════════════════════════════════════════════ */
+.chat-toggle-btn {
+  background: rgba(14,18,32,0.85);
+  border: 1px solid rgba(125,211,252,0.3);
+  color: var(--accent); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 0.5rem 1.2rem; border-radius: 40px; cursor: pointer;
+  backdrop-filter: blur(10px); transition: all 0.3s;
+}
+.chat-toggle-btn:hover {
+  background: var(--accent); color: var(--bg); transform: translateY(-2px);
+}
+
+.ai-chat-window {
+  position: fixed; bottom: 85px; right: 2.5rem; width: 340px; height: 480px;
+  background: rgba(7,9,15,0.92); border: 1px solid rgba(125,211,252,0.25);
+  border-radius: 20px; z-index: 1500; display: flex; flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
+  transition: transform 0.4s var(--ease-out), opacity 0.4s;
+  text-align: left; /* Reset any inherited center alignment */
+}
+.ai-chat-window.open {
+  transform: translateY(0) scale(1); opacity: 1; pointer-events: auto;
+}
+
+.ai-chat-header {
+  padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ai-chat-title {
+  font-size: 0.85rem; font-weight: 800; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 2px;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.ai-chat-close {
+  background: none; border: none; color: var(--muted); font-size: 1.1rem;
+  cursor: pointer; transition: color 0.3s;
+}
+.ai-chat-close:hover { color: var(--text); }
+
+.ai-chat-messages {
+  flex: 1; padding: 1.2rem; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0.9rem;
+  align-items: flex-start; /* Ensure bubbles stay left by default */
+  overscroll-behavior: contain; /* Traps scroll wheel inside the chat div */
+}
+.ai-chat-messages::-webkit-scrollbar { width: 6px; }
+.ai-chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+.chat-message {
+  max-width: 85%; width: fit-content; margin-right: auto !important; 
+  margin-left: 0 !important;
+  padding: 0.8rem 1.2rem; border-radius: 16px;
+  font-size: 0.9rem; line-height: 1.5;
+  white-space: pre-wrap; /* Preserves AI line breaks and lists */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  text-align: left !important;
+}
+.ai-message {
+  align-self: flex-start !important; 
+  background: rgba(125,211,252,0.08);
+  border: 1px solid rgba(125,211,252,0.2); color: var(--text);
+  border-bottom-left-radius: 4px; border-left: 3px solid var(--accent);
+  text-align: left !important;
+}
+.user-message {
+  align-self: flex-end; background: var(--text); color: var(--bg);
+  border-bottom-right-radius: 4px; font-weight: 600;
+  margin-right: 0; margin-left: auto; /* Forces right alignment */
+}
+
+.ai-chat-input-area {
+  padding: 1rem; border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; gap: 0.8rem; align-items: center;
+}
+.ai-chat-input-area input {
+  flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.8rem 1rem; border-radius: 40px; color: var(--text);
+  font-family: var(--font); font-size: 0.9rem; outline: none; transition: border-color 0.3s;
+}
+.ai-chat-input-area input:focus { border-color: rgba(125,211,252,0.4); }
+.ai-chat-input-area button {
+  background: var(--accent); color: var(--bg); border: none;
+  width: 42px; height: 42px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+.ai-chat-input-area button:hover { transform: scale(1.05); background: #bae6fd; }
+
+@media (max-width: 640px) {
+  .ai-chat-window { bottom: 18px; right: 10px; left: 10px; width: auto; height: 60vh; }
+}

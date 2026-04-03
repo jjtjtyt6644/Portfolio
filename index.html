@@ -270,13 +270,45 @@
         <button class="bubble-close" id="bubble-close" aria-label="Dismiss">✕</button>
       </div>
 
-      <!-- Character container -->
-      <div class="mascot-char" id="mascot-char">
-        <img src="./assets/mascot.png" alt="Junyu's mascot" />
+      <!-- Character container & Chat Toggle -->
+      <div class="mascot-controls" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; pointer-events: auto;">
+        <div class="mascot-char" id="mascot-char">
+          <img src="./assets/mascot.png" alt="Junyu's mascot" />
+        </div>
+        <button class="chat-toggle-btn" id="chat-toggle-btn">Chat with me!</button>
       </div>
     </div>
 
-    <!-- ─── Rate Limit Modal ───────────────────────── -->
+    <!-- ─── AI Chat Window ──────────────────────────── -->
+    <div class="ai-chat-window" id="ai-chat-window">
+      <div class="ai-chat-header">
+        <div class="ai-chat-title">
+          <span class="badge-dot" style="animation:none; width:6px; height:6px;"></span>
+          Agent Core
+        </div>
+        <button class="ai-chat-close" id="ai-chat-close">✕</button>
+      </div>
+      <div class="ai-chat-messages" id="ai-chat-messages" data-lenis-prevent>
+        <!-- Messages injected via JS for consistency -->
+      </div>
+      <div class="ai-chat-input-area">
+        <input type="text" id="ai-chat-input" placeholder="Query agent..." autocomplete="off" />
+        <button id="ai-chat-send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── Chat Rate Limit Modal ──────────────────── -->
+    <div class="chat-limit-overlay" id="chat-limit-overlay">
+      <div class="chat-limit-modal" id="chat-limit-modal">
+        <h3 id="chat-limit-title">Nearing Limit</h3>
+        <p id="chat-limit-desc">You are nearing your chat message limit. Please slow down to avoid a temporary lockout.</p>
+        <button id="chat-limit-close">Acknowledge</button>
+      </div>
+    </div>
+
+    <!-- ─── Mascot Rate Limit Modal ─────────────────── -->
     <div class="rate-limit-overlay" id="rate-limit-overlay">
       <div class="rate-limit-modal">
         <h3>Rate Limit Exceeded</h3>

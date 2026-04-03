@@ -436,6 +436,22 @@ document.getElementById('rate-limit-close').addEventListener('click', () => {
   rateLimitOverlay.classList.remove('open');
 });
 
+// ── NEW: AI Chat Rate Limiting ───────────────
+const chatMsgTimestamps = [];
+const CHAT_MAX_MESSAGES = 10;
+const CHAT_WARNING_THRESHOLD = 6;
+let isChatLimited = false;
+
+const chatLimitOverlay = document.getElementById('chat-limit-overlay');
+const chatLimitModal = document.getElementById('chat-limit-modal');
+const chatLimitTitle = document.getElementById('chat-limit-title');
+const chatLimitDesc = document.getElementById('chat-limit-desc');
+const chatLimitClose = document.getElementById('chat-limit-close');
+
+chatLimitClose.addEventListener('click', () => {
+  chatLimitOverlay.classList.remove('open');
+});
+
 // ── Click character → Force regenerate thought ───────
 mascotChar.addEventListener('click', async () => {
   if (isRateLimited) {
@@ -505,4 +521,180 @@ setTimeout(() => {
   CACHED_RESPONSES['hero'] = "Hello. I am Junyu's AI assistant. Scroll down, and I will provide real-time context on his work.";
   switchSection('hero')
 }, 2400)
+
+// ── AI Interactive Chat ────────────────────────────
+const chatToggleBtn = document.getElementById('chat-toggle-btn')
+const aiChatWindow = document.getElementById('ai-chat-window')
+const aiChatClose = document.getElementById('ai-chat-close')
+const aiChatMessages = document.getElementById('ai-chat-messages')
+const aiChatInput = document.getElementById('ai-chat-input')
+const aiChatSend = document.getElementById('ai-chat-send')
+
+let conversationHistory = []
+
+// Toggle Chat Window
+chatToggleBtn.addEventListener('click', () => {
+  aiChatWindow.classList.add('open')
+  aiChatInput.focus()
+})
+
+aiChatClose.addEventListener('click', () => {
+  aiChatWindow.classList.remove('open')
+})
+
+function appendMessage(role, text) {
+  const div = document.createElement('div')
+  div.className = `chat-message ${role === 'user' ? 'user-message' : 'ai-message'}`
+  
+  // Basic Markdown-to-HTML conversion for bold (**) and italics (*)
+  let formattedText = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  div.innerHTML = formattedText
+  aiChatMessages.appendChild(div)
+  
+  // Custom scroll behavior: Ensure the START of new AI messages is visible 
+  // without jumping past them to the very bottom of the window.
+  setTimeout(() => {
+    if (role === 'ai') {
+      const offset = div.offsetTop - 15; // Small margin for aesthetic sky-room
+      aiChatMessages.scrollTo({ top: offset, behavior: 'smooth' });
+    } else {
+      aiChatMessages.scrollTop = aiChatMessages.scrollHeight
+    }
+  }, 10)
+}
+
+async function handleChatSubmit() {
+  const text = aiChatInput.value.trim()
+  if (!text) return
+
+  // ── RATE LIMIT CHECK ──
+  if (isChatLimited) {
+    chatLimitOverlay.classList.add('open');
+    return;
+  }
+
+  const now = Date.now();
+  // Clear old timestamps
+  while (chatMsgTimestamps.length > 0 && chatMsgTimestamps[0] < now - BLOCK_DURATION_MS) {
+    chatMsgTimestamps.shift();
+  }
+
+  chatMsgTimestamps.push(now);
+  const msgCount = chatMsgTimestamps.length;
+
+  // Hard Block at 10
+  if (msgCount >= CHAT_MAX_MESSAGES) {
+    isChatLimited = true;
+    chatLimitTitle.textContent = "Rate Limit Exceeded";
+    chatLimitDesc.textContent = "You have been locked out of the chat for 2 minutes due to excessive messaging.";
+    chatLimitModal.className = "chat-limit-modal state-blocked";
+    chatLimitOverlay.classList.add('open');
+
+    setTimeout(() => {
+      isChatLimited = false;
+      chatMsgTimestamps.length = 0;
+    }, BLOCK_DURATION_MS);
+    return;
+  }
+
+  // Graduated Warnings at 6, 7, 8, 9
+  if (msgCount >= CHAT_WARNING_THRESHOLD) {
+    chatLimitTitle.textContent = "Nearing Limit";
+    chatLimitDesc.textContent = `Warning: You are approaching the message limit (${msgCount}/${CHAT_MAX_MESSAGES}). Please slow down.`;
+    chatLimitModal.className = "chat-limit-modal state-warning";
+    chatLimitOverlay.classList.add('open');
+  }
+
+  // 1. Add user message to UI and history
+  appendMessage('user', text)
+  conversationHistory.push({ role: 'user', content: text })
+  aiChatInput.value = ''
+
+  // 2. Add loading indicator
+  const loadingDiv = document.createElement('div')
+  loadingDiv.className = 'chat-message ai-message'
+  loadingDiv.textContent = 'Thinking...'
+  aiChatMessages.appendChild(loadingDiv)
+  aiChatMessages.scrollTop = aiChatMessages.scrollHeight
+
+  // 3. Setup Fallback API for Local Dev
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+  let responseText = "Connection failed."
+
+  try {
+    if (isLocal) {
+      const apiKey = import.meta.env.VITE_GROQ_API_KEY
+      if (!apiKey) throw new Error("Local API key missing.")
+
+      const truncatedHistory = conversationHistory.slice(-8);
+      const payloadMessages = [
+        { role: 'system', content: `You are the official Professional AI Scout and Recruitment Representative for Junyu (@jjtjtyt6644).
+Your objective is to provide high-level, technical, and professional insights to CEOs, CTOs, and recruiters visiting this portfolio.
+
+Core Identity of Junyu:
+- Independent Cybersecurity Professional and Full-Stack Developer.
+- IBM Certified: Professional AI and Professional Cyber Security.
+- GitHub Identity: jjtjtyt6644 (over 17 active repositories).
+
+Professional Protocols:
+- Tone: Extremely polished, analytical, and recruitment-ready.
+- Perspective: ALWAYS speak about Junyu in the THIRD PERSON. NEVER address the user as Junyu.
+- Target Audience: High-level decision-makers and recruiters. 
+- Guardrails: Do NOT hallucinate or "get creative" with Junyu's history. 
+- IMPORTANT: If asked about something you do not know, you MUST state: "I have no relevant information on that specific topic at this time. However, you can contact Junyu specifically for more details via his GitHub (https://github.com/jjtjtyt6644) or Email (yaoprox0@gmail.com)."` },
+        ...truncatedHistory
+      ]
+
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages: payloadMessages, max_tokens: 512, temperature: 0.5 })
+      })
+      const data = await res.json()
+      responseText = data.choices[0].message.content.trim()
+    } else {
+      // Production API call
+      const res = await fetch('/api/converse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ history: conversationHistory.slice(-8) })
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      responseText = data.choices[0].message.content.trim()
+    }
+  } catch (err) {
+    console.error("Chat Error:", err)
+    responseText = "Sorry, my neural link is currently offline."
+  }
+
+  // 4. Update UI and history with response
+  loadingDiv.remove()
+  appendMessage('ai', responseText)
+  conversationHistory.push({ role: 'assistant', content: responseText })
+}
+
+// Bind Send Button & Enter Key
+aiChatSend.addEventListener('click', handleChatSubmit)
+aiChatInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleChatSubmit()
+})
+
+// Inject the initial welcome message via JS once when first opened
+let firstOpen = true;
+chatToggleBtn.addEventListener('click', () => {
+  if (firstOpen) {
+    appendMessage('ai', "Hello! I am Junyu's AI guide. I'm here to provide professional context or answer questions about his background, projects, and work-workflow. What can I help you with today?");
+    firstOpen = false;
+  }
+});
 
