@@ -425,8 +425,44 @@ lenis.on('scroll', () => {
   }, 750)  // User holds still for 750ms -> grab new section
 })
 
+// ── Rate Limiting State ────────────────────────────────
+const clickTimestamps = [];
+const MAX_CLICKS = 5;
+const BLOCK_DURATION_MS = 2 * 60 * 1000;
+let isRateLimited = false;
+
+const rateLimitOverlay = document.getElementById('rate-limit-overlay');
+document.getElementById('rate-limit-close').addEventListener('click', () => {
+  rateLimitOverlay.classList.remove('open');
+});
+
 // ── Click character → Force regenerate thought ───────
 mascotChar.addEventListener('click', async () => {
+  if (isRateLimited) {
+    rateLimitOverlay.classList.add('open');
+    return;
+  }
+
+  const now = Date.now();
+  // Remove timestamps older than our time window
+  while (clickTimestamps.length > 0 && clickTimestamps[0] < now - BLOCK_DURATION_MS) {
+    clickTimestamps.shift();
+  }
+
+  clickTimestamps.push(now);
+
+  if (clickTimestamps.length > MAX_CLICKS) {
+    isRateLimited = true;
+    rateLimitOverlay.classList.add('open');
+    
+    // Automatically lift the ban after 2 minutes
+    setTimeout(() => {
+      isRateLimited = false;
+      clickTimestamps.length = 0;
+    }, BLOCK_DURATION_MS);
+    return;
+  }
+
   // Clear the cache for this section so it generates a fresh thought
   CACHED_RESPONSES[activeSection] = null;
 
