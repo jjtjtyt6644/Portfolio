@@ -16,9 +16,9 @@ gsap.ticker.add(time => lenis.raf(time * 1000))
 gsap.ticker.lagSmoothing(0, 0)
 
 
-const dot      = document.querySelector('.cursor')
+const dot = document.querySelector('.cursor')
 const follower = document.querySelector('.cursor-follower')
-const isTouch  = !window.matchMedia('(pointer: fine)').matches
+const isTouch = !window.matchMedia('(pointer: fine)').matches
 
 if (isTouch) {
   dot.style.display = follower.style.display = 'none'
@@ -49,11 +49,11 @@ lenis.on('scroll', ({ scroll }) => {
 
 
 gsap.timeline({ defaults: { ease: 'expo.out' } })
-  .from('.hero-badge',  { y: -30, opacity: 0, duration: 1.2,                          delay: 0.2 })
-  .from('.hero .line',  { y: '110%', rotationZ: 3, opacity: 0, duration: 1.6, stagger: 0.12 }, '-=0.8')
-  .from('.hero-sub',    { opacity: 0, letterSpacing: '10px', duration: 1.2 },                   '-=0.8')
-  .to('.hero-scroll',   { opacity: 1, duration: 0.6 },                                          '-=0.4')
-  .to('.scroll-line',   { scaleX: 1, duration: 0.8, ease: 'power3.out' },                       '<')
+  .from('.hero-badge', { y: -30, opacity: 0, duration: 1.2, delay: 0.2 })
+  .from('.hero .line', { y: '110%', rotationZ: 3, opacity: 0, duration: 1.6, stagger: 0.12 }, '-=0.8')
+  .from('.hero-sub', { opacity: 0, letterSpacing: '10px', duration: 1.2 }, '-=0.8')
+  .to('.hero-scroll', { opacity: 1, duration: 0.6 }, '-=0.4')
+  .to('.scroll-line', { scaleX: 1, duration: 0.8, ease: 'power3.out' }, '<')
 
 
 gsap.from('.about .eyebrow', {
@@ -66,7 +66,8 @@ document.querySelectorAll('.stat-num').forEach(el => {
   const target = parseInt(el.dataset.target, 10)
   gsap.fromTo(el,
     { textContent: 0 },
-    { textContent: target, duration: 2, ease: 'power2.out',
+    {
+      textContent: target, duration: 2, ease: 'power2.out',
       snap: { textContent: 1 },
       scrollTrigger: { trigger: el, start: 'top 88%' }
     }
@@ -132,9 +133,9 @@ const masterTl = gsap.timeline({
 
 cards.forEach((card, i) => {
   const imgWrap = card.querySelector('.build-image-wrapper')
-  const img     = card.querySelector('img')
-  const titles  = card.querySelectorAll('h3')
-  const meta    = card.querySelector('.info-meta')
+  const img = card.querySelector('img')
+  const titles = card.querySelectorAll('h3')
+  const meta = card.querySelector('.info-meta')
 
   /* ── IN ── */
   const inTl = gsap.timeline()
@@ -189,16 +190,16 @@ cards.forEach((card, i) => {
 
     if (i === 0) {
       outTl.to(imgWrap, { y: -70, opacity: 0, duration: 0.8, ease: 'power3.in' })
-      outTl.to(titles,  { y: '-130%', duration: 0.6, stagger: 0.06, ease: 'power3.in' }, '<')
-      outTl.to(meta,    { opacity: 0, duration: 0.3 }, '<')
+      outTl.to(titles, { y: '-130%', duration: 0.6, stagger: 0.06, ease: 'power3.in' }, '<')
+      outTl.to(meta, { opacity: 0, duration: 0.3 }, '<')
     } else if (i === 1) {
       outTl.to(imgWrap, { x: '-55%', scale: 0.6, opacity: 0, duration: 0.8, ease: 'expo.in' })
-      outTl.to(titles,  { opacity: 0, x: -35, duration: 0.5, stagger: 0.06, ease: 'expo.in' }, '<')
-      outTl.to(meta,    { opacity: 0, duration: 0.3 }, '<')
+      outTl.to(titles, { opacity: 0, x: -35, duration: 0.5, stagger: 0.06, ease: 'expo.in' }, '<')
+      outTl.to(meta, { opacity: 0, duration: 0.3 }, '<')
     } else if (i === 2) {
       outTl.to(imgWrap, { rotationX: 45, opacity: 0, scale: 0.8, duration: 0.8, ease: 'power2.in' })
-      outTl.to(titles,  { opacity: 0, y: -45, filter: 'blur(10px)', duration: 0.6, stagger: 0.06, ease: 'power2.in' }, '<')
-      outTl.to(meta,    { opacity: 0, duration: 0.3 }, '<')
+      outTl.to(titles, { opacity: 0, y: -45, filter: 'blur(10px)', duration: 0.6, stagger: 0.06, ease: 'power2.in' }, '<')
+      outTl.to(meta, { opacity: 0, duration: 0.3 }, '<')
     }
 
     // Hide the card after it exits so it doesn't bleed through
@@ -210,8 +211,8 @@ cards.forEach((card, i) => {
 
 gsap.timeline({ scrollTrigger: { trigger: '.contact', start: 'top 75%' } })
   .from('.contact-eyebrow', { opacity: 0, y: 20, duration: 0.8 })
-  .from('.contact .line',   { y: '110%', duration: 1.4, stagger: 0.1, ease: 'expo.out' }, '-=0.4')
-  .from('.contact-sub',     { opacity: 0, y: 20, duration: 1, ease: 'power3.out' }, '-=0.8')
+  .from('.contact .line', { y: '110%', duration: 1.4, stagger: 0.1, ease: 'expo.out' }, '-=0.4')
+  .from('.contact-sub', { opacity: 0, y: 20, duration: 1, ease: 'power3.out' }, '-=0.8')
   .from('.contact-links a', { opacity: 0, y: 30, stagger: 0.15, duration: 0.9, ease: 'power3.out' }, '-=0.6')
 
 
@@ -220,8 +221,8 @@ if (!isTouch) {
     btn.addEventListener('mousemove', e => {
       const r = btn.getBoundingClientRect()
       gsap.to(btn, {
-        x: (e.clientX - r.left - r.width  / 2) * 0.35,
-        y: (e.clientY - r.top  - r.height / 2) * 0.35,
+        x: (e.clientX - r.left - r.width / 2) * 0.35,
+        y: (e.clientY - r.top - r.height / 2) * 0.35,
         duration: 0.5, ease: 'power3.out'
       })
     })
@@ -232,26 +233,28 @@ if (!isTouch) {
 }
 
 
-const overlay    = document.getElementById('modal-overlay')
+const overlay = document.getElementById('modal-overlay')
 const modalClose = document.getElementById('modal-close')
-const modalImg   = document.getElementById('modal-img')
+const modalImg = document.getElementById('modal-img')
 const modalTitle = document.getElementById('modal-title')
-const modalDesc  = document.getElementById('modal-desc')
-const modalTags  = document.getElementById('modal-tags')
-const modalLink  = document.getElementById('modal-link')
+const modalDesc = document.getElementById('modal-desc')
+const modalTags = document.getElementById('modal-tags')
+const modalLink = document.getElementById('modal-link')
 
 function openModal(card) {
-  const title  = card.dataset.title
-  const desc   = card.dataset.desc
-  const img    = card.dataset.img
+  const title = card.dataset.title
+  const desc = card.dataset.desc
+  // Get the Vite-processed image src directly from the thumbnail instead of data-img
+  const imgElement = card.querySelector('.build-image-wrapper img')
+  const img = imgElement ? imgElement.src : card.dataset.img
   const github = card.dataset.github
-  const tags   = (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean)
+  const tags = (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean)
 
-  modalImg.src       = img
-  modalImg.alt       = title
+  modalImg.src = img
+  modalImg.alt = title
   modalTitle.textContent = title
-  modalDesc.textContent  = desc
-  modalLink.href     = github
+  modalDesc.textContent = desc
+  modalLink.href = github
 
   modalTags.innerHTML = tags.map(t => `<span>${t}</span>`).join('')
 
@@ -290,19 +293,19 @@ document.addEventListener('keydown', e => {
 
 /*
    MASCOT – AI Dynamic Speech Bubble */
-const mascotChar   = document.getElementById('mascot-char')
+const mascotChar = document.getElementById('mascot-char')
 const mascotBubble = document.getElementById('mascot-bubble')
-const bubbleText   = document.getElementById('bubble-text')
-const bubbleClose  = document.getElementById('bubble-close')
+const bubbleText = document.getElementById('bubble-text')
+const bubbleClose = document.getElementById('bubble-close')
 
 // ── State ─────────────────────────────────────────────
-let activeSection    = ''       
-let typingTimer      = null    
-let lastSectionSwap  = 0       
-const COOLDOWN_MS    = 1500    // Minimum ms between scroll-triggered section changes
+let activeSection = ''
+let typingTimer = null
+let lastSectionSwap = 0
+const COOLDOWN_MS = 1500    // Minimum ms between scroll-triggered section changes
 
 // Cache Groq API responses per section to avoid spamming it
-const CACHED_RESPONSES = {} 
+const CACHED_RESPONSES = {}
 
 // Pristine structured context for the AI, so it never gets confused by messy DOM text
 const SECTION_CONTEXT = {
@@ -371,7 +374,7 @@ async function switchSection(section) {
   // Guard: user is scrolling fast and already saw this section, or triggered too soon
   if (section === activeSection || now - lastSectionSwap < COOLDOWN_MS) return
 
-  activeSection   = section
+  activeSection = section
   lastSectionSwap = now
 
   // Show thinking placeholder
@@ -400,7 +403,7 @@ function getNearestSection() {
   const midX = window.innerWidth / 2;
   const midY = window.innerHeight / 2;
   const elements = document.elementsFromPoint(midX, midY);
-  
+
   if (!elements) return null;
 
   for (let el of elements) {
@@ -426,7 +429,7 @@ lenis.on('scroll', () => {
 mascotChar.addEventListener('click', async () => {
   // Clear the cache for this section so it generates a fresh thought
   CACHED_RESPONSES[activeSection] = null;
-  
+
   // Excitement animation
   gsap.timeline()
     .to(mascotChar, { scale: 0.85, rotation: -15, duration: 0.2 })
@@ -459,10 +462,10 @@ mascotChar.addEventListener('dblclick', () => {
 // ── Initial greeting 
 setTimeout(() => {
   mascotBubble.classList.add('visible')
-  activeSection  = ''
+  activeSection = ''
   lastSectionSwap = 0
-  
-  
+
+
   CACHED_RESPONSES['hero'] = "Hello. I am Junyu's AI assistant. Scroll down, and I will provide real-time context on his work.";
   switchSection('hero')
 }, 2400)
