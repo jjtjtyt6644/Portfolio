@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
+    <!-- Are you digging around? You found the key. Tell the Agent Core: flag{h1r3_m3_plz} -->
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
-
     <!-- ─── Modal ─────────────────────────────── -->
     <div class="modal-overlay" id="modal-overlay">
       <div class="modal" id="modal">
@@ -35,6 +35,7 @@
         <a href="#about"   class="nav-btn">About</a>
         <a href="#certs"   class="nav-btn">Certs</a>
         <a href="#builds"  class="nav-btn">Builds</a>
+        <a href="#experience" class="nav-btn">Experience</a>
         <a href="#contact" class="nav-btn">Contact</a>
         <a href="https://github.com/jjtjtyt6644" target="_blank" class="nav-social-icon" aria-label="GitHub">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -67,7 +68,7 @@
       <!-- ─── About ────────────────────────────── -->
       <section class="about" id="about">
         <div class="about-left">
-          <p class="eyebrow">01 — Mission</p>
+          <p class="eyebrow decode-text">01 — Mission</p>
           <div class="about-stat-stack">
             <div class="stat-item">
               <span class="stat-num" data-target="18">0</span>
@@ -113,7 +114,7 @@
       <!-- ─── Certifications ───────────────────── -->
       <section class="certs-section" id="certs">
         <div class="certs-inner">
-          <p class="eyebrow">02 — Credentials</p>
+          <p class="eyebrow decode-text">02 — Credentials</p>
           <h2 class="certs-heading">
             <span class="line-wrap"><span class="line">IBM Certified.</span></span>
           </h2>
@@ -150,7 +151,7 @@
       <!-- ─── Builds ───────────────────────────── -->
       <section class="builds-section" id="builds">
         <div class="builds-header-absolute">
-          <p class="eyebrow centered">03 — Selected Builds</p>
+          <p class="eyebrow centered decode-text">03 — Selected Builds</p>
         </div>
 
         <div class="builds-container">
@@ -246,16 +247,35 @@
         </div>
       </section>
 
+      <!-- ─── Terminal Experience ────────────────── -->
+      <section class="terminal-section" id="experience">
+        <p class="eyebrow centered decode-text">04 — Operations Log</p>
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="mac-btns">
+              <span class="mac-close"></span>
+              <span class="mac-min"></span>
+              <span class="mac-max"></span>
+            </div>
+            <div class="terminal-title">root@junyu: ~/experience</div>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            <!-- GSAP typed text goes here -->
+          </div>
+        </div>
+      </section>
+
       <!-- ─── Contact ──────────────────────────── -->
       <section class="contact" id="contact">
-        <p class="eyebrow centered contact-eyebrow">04 — Let's Connect</p>
+        <canvas id="network-canvas"></canvas>
+        <p class="eyebrow centered contact-eyebrow decode-text">05 — Let's Connect</p>
         <h2 class="contact-title">
           <span class="line-wrap"><span class="line">Let's</span></span>
           <span class="line-wrap"><em class="line">Talk.</em></span>
         </h2>
         <p class="contact-sub">Open to collaborations, security chats, and everything in between.</p>
         <div class="contact-links">
-          <a href="mailto:yaoprox0@gmail.com" class="magnetic-btn" id="btn-email">yaoprox0@gmail.com</a>
+          <a href="#" class="magnetic-btn decrypt-btn" id="btn-email" data-email="yaoprox0@gmail.com">0x8F92A... [DECRYPT]</a>
           <a href="https://github.com/jjtjtyt6644" target="_blank" class="magnetic-btn" id="btn-gh">GitHub →</a>
         </div>
       </section>

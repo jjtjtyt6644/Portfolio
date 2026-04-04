@@ -61,7 +61,7 @@ gsap.from('.about .eyebrow', {
   scrollTrigger: { trigger: '.about', start: 'top 80%' }
 })
 
-// Animated number counters
+
 document.querySelectorAll('.stat-num').forEach(el => {
   const target = parseInt(el.dataset.target, 10)
   gsap.fromTo(el,
@@ -118,7 +118,7 @@ gsap.to('.cert-card', {
 
 const cards = gsap.utils.toArray('.build-card')
 
-// Hide ALL cards immediately via GSAP so CSS isn't fighting us
+
 gsap.set(cards, { autoAlpha: 0 })
 
 const masterTl = gsap.timeline({
@@ -140,11 +140,11 @@ cards.forEach((card, i) => {
   /* ── IN ── */
   const inTl = gsap.timeline()
 
-  // Make card visible first
+
   inTl.set(card, { autoAlpha: 1 })
 
   if (i === 0) {
-    // Clip-path wipe from bottom + zoom out
+
     inTl.fromTo(imgWrap,
       { clipPath: 'inset(100% 0% 0% 0%)', y: 40 },
       { clipPath: 'inset(0%   0% 0% 0%)', y: 0, duration: 1, ease: 'expo.inOut' }
@@ -155,7 +155,7 @@ cards.forEach((card, i) => {
       { y: '0%', rotation: 0, duration: 1, stagger: 0.1, ease: 'expo.out' }, '-=0.6')
 
   } else if (i === 1) {
-    // Slide from far right + skew title drops from above
+
     inTl.fromTo(imgWrap,
       { x: '55%', opacity: 0, scale: 0.88 },
       { x: '0%', opacity: 1, scale: 1, duration: 1.1, ease: 'power4.out' }
@@ -165,7 +165,7 @@ cards.forEach((card, i) => {
       { y: '0%', skewY: 0, duration: 1.1, stagger: 0.1, ease: 'back.out(1.3)' }, '-=0.8')
 
   } else {
-    // 3D rotationX flip + blur-fade text
+
     inTl.fromTo(imgWrap,
       { rotationX: -65, scale: 0.75, opacity: 0, transformPerspective: 1200 },
       { rotationX: 0, scale: 1, opacity: 1, duration: 1.3, ease: 'elastic.out(1, 0.65)' }
@@ -175,14 +175,14 @@ cards.forEach((card, i) => {
       { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.1, ease: 'power3.out' }, '-=0.7')
   }
 
-  // Meta always floats up
+
   inTl.fromTo(meta,
     { opacity: 0, y: 22 },
     { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.4'
   )
 
   masterTl.add(inTl)
-  masterTl.to({}, { duration: 0.9 }) // hold
+  masterTl.to({}, { duration: 0.9 })
 
   /* ── OUT ── */
   if (i < cards.length - 1) {
@@ -202,7 +202,7 @@ cards.forEach((card, i) => {
       outTl.to(meta, { opacity: 0, duration: 0.3 }, '<')
     }
 
-    // Hide the card after it exits so it doesn't bleed through
+
     outTl.set(card, { autoAlpha: 0 })
     masterTl.add(outTl)
   }
@@ -244,7 +244,7 @@ const modalLink = document.getElementById('modal-link')
 function openModal(card) {
   const title = card.dataset.title
   const desc = card.dataset.desc
-  // Get the Vite-processed image src directly from the thumbnail instead of data-img
+
   const imgElement = card.querySelector('.build-image-wrapper img')
   const img = imgElement ? imgElement.src : card.dataset.img
   const github = card.dataset.github
@@ -269,7 +269,7 @@ function closeModal() {
   lenis.start()
 }
 
-// Click on "Explore →" buttons inside build cards
+
 document.querySelectorAll('.open-modal-btn').forEach(btn => {
   btn.addEventListener('click', e => {
     e.stopPropagation()
@@ -278,15 +278,15 @@ document.querySelectorAll('.open-modal-btn').forEach(btn => {
   })
 })
 
-// Close via × button
+
 modalClose.addEventListener('click', closeModal)
 
-// Close by clicking backdrop
+
 overlay.addEventListener('click', e => {
   if (e.target === overlay) closeModal()
 })
 
-// Close on Escape key
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal()
 })
@@ -298,27 +298,28 @@ const mascotBubble = document.getElementById('mascot-bubble')
 const bubbleText = document.getElementById('bubble-text')
 const bubbleClose = document.getElementById('bubble-close')
 
-// ── State ─────────────────────────────────────────────
+
 let activeSection = ''
 let typingTimer = null
 let lastSectionSwap = 0
-const COOLDOWN_MS = 1500    // Minimum ms between scroll-triggered section changes
+const COOLDOWN_MS = 1500
 
-// Cache Groq API responses per section to avoid spamming it
+
 const CACHED_RESPONSES = {}
 
-// Pristine structured context for the AI, so it never gets confused by messy DOM text
+
 const SECTION_CONTEXT = {
   hero: "Junyu's Hero Section: A high schooler from Singapore passionate about Cybersecurity, AI, and Networking. Mission is breaking things legally.",
   about: "Junyu's About Section: 18+ GitHub repos. 2 IBM certifications. Specializes in Security, Networking, and rapid development.",
   certs: "Junyu's Certifications: IBM AI Certified and IBM Cyber Security Certified while still in high school.",
   builds: "Junyu's Projects: 1. CyberAttacks-Simulation (vulnerable site with SOC dashboard). 2. FocusMode (Chrome productivity extension). 3. Ai-Vision (AI browser assistant). 4. Proxyyy (a proxy server for traffic routing & security).",
+  experience: "Junyu's Experience: Timeline showing a cyber security student background, and an IBM Certified AI builder status.",
   contact: "Junyu's Contact Page: Email yaoprox0@gmail.com. Open to security chats and collaboration."
 }
 
-// ── Fetch from Groq AI ────────────────────────────────
+
 async function fetchElaboration(sectionId) {
-  // If we already generated an answer for this section, just return it
+
   if (CACHED_RESPONSES[sectionId]) {
     return CACHED_RESPONSES[sectionId]
   }
@@ -335,7 +336,7 @@ async function fetchElaboration(sectionId) {
     const data = await response.json()
     if (data.choices && data.choices.length > 0) {
       const result = data.choices[0].message.content.trim()
-      CACHED_RESPONSES[sectionId] = result // Cache it!
+      CACHED_RESPONSES[sectionId] = resul
       return result
     }
     return "The server encountered an error while processing context."
@@ -345,7 +346,7 @@ async function fetchElaboration(sectionId) {
   }
 }
 
-// ── Typewriter ────────────────────────────────────────
+
 function typeText(text) {
   clearInterval(typingTimer)
   bubbleText.classList.remove('typing')
@@ -367,39 +368,39 @@ function typeText(text) {
   }, 38)
 }
 
-// ── Switch to a new section ───────────────────────────
+
 async function switchSection(section) {
   const now = Date.now()
 
-  // Guard: user is scrolling fast and already saw this section, or triggered too soon
+
   if (section === activeSection || now - lastSectionSwap < COOLDOWN_MS) return
 
   activeSection = section
   lastSectionSwap = now
 
-  // Show thinking placeholder
+
   typeText("Processing context...")
 
-  // Bounce character
+
   gsap.fromTo(mascotChar,
     { y: -16 },
     { y: 0, duration: 0.8, ease: 'elastic.out(1, 0.45)' }
   )
 
-  // Fetch logic
+
   const message = await fetchElaboration(section)
 
-  // Double check if user hasn't scrolled away during the API request taking time
+
   if (activeSection === section) {
     typeText(message)
   }
 }
 
-// ── Scroll-stop detection ─────────────────────────────
-const TRACKED = ['hero', 'about', 'certs', 'builds', 'contact']
+
+const TRACKED = ['hero', 'about', 'certs', 'builds', 'experience', 'contact']
 
 function getNearestSection() {
-  // Flawless accuracy: what section is physically in the exact center of the user's screen?
+
   const midX = window.innerWidth / 2;
   const midY = window.innerHeight / 2;
   const elements = document.elementsFromPoint(midX, midY);
@@ -422,10 +423,10 @@ lenis.on('scroll', () => {
   scrollStopTimer = setTimeout(() => {
     const section = getNearestSection()
     if (section) switchSection(section)
-  }, 750)  // User holds still for 750ms -> grab new section
+  }, 750)
 })
 
-// ── Rate Limiting State ────────────────────────────────
+
 const clickTimestamps = [];
 const MAX_CLICKS = 5;
 const BLOCK_DURATION_MS = 2 * 60 * 1000;
@@ -436,7 +437,7 @@ document.getElementById('rate-limit-close').addEventListener('click', () => {
   rateLimitOverlay.classList.remove('open');
 });
 
-// ── NEW: AI Chat Rate Limiting ───────────────
+
 const chatMsgTimestamps = [];
 const CHAT_MAX_MESSAGES = 10;
 const CHAT_WARNING_THRESHOLD = 6;
@@ -452,7 +453,7 @@ chatLimitClose.addEventListener('click', () => {
   chatLimitOverlay.classList.remove('open');
 });
 
-// ── Click character → Force regenerate thought ───────
+
 mascotChar.addEventListener('click', async () => {
   if (isRateLimited) {
     rateLimitOverlay.classList.add('open');
@@ -460,7 +461,7 @@ mascotChar.addEventListener('click', async () => {
   }
 
   const now = Date.now();
-  // Remove timestamps older than our time window
+
   while (clickTimestamps.length > 0 && clickTimestamps[0] < now - BLOCK_DURATION_MS) {
     clickTimestamps.shift();
   }
@@ -471,7 +472,7 @@ mascotChar.addEventListener('click', async () => {
     isRateLimited = true;
     rateLimitOverlay.classList.add('open');
     
-    // Automatically lift the ban after 2 minutes
+
     setTimeout(() => {
       isRateLimited = false;
       clickTimestamps.length = 0;
@@ -479,10 +480,10 @@ mascotChar.addEventListener('click', async () => {
     return;
   }
 
-  // Clear the cache for this section so it generates a fresh thought
+
   CACHED_RESPONSES[activeSection] = null;
 
-  // Excitement animation
+
   gsap.timeline()
     .to(mascotChar, { scale: 0.85, rotation: -15, duration: 0.2 })
     .to(mascotChar, { scale: 1, rotation: 0, duration: 1.2, ease: 'elastic.out(1, 0.3)' });
@@ -493,13 +494,13 @@ mascotChar.addEventListener('click', async () => {
   typeText(message);
 });
 
-// ── Dismiss bubble via × ──────────────────────────────
+
 bubbleClose.addEventListener('click', () => {
   mascotBubble.classList.remove('visible')
   clearInterval(typingTimer)
 })
 
-// ── Double-click → toggle bubble ─────────────────────
+
 mascotChar.addEventListener('dblclick', () => {
   if (mascotBubble.classList.contains('visible')) {
     mascotBubble.classList.remove('visible')
@@ -511,7 +512,7 @@ mascotChar.addEventListener('dblclick', () => {
   }
 })
 
-// ── Initial greeting 
+
 setTimeout(() => {
   mascotBubble.classList.add('visible')
   activeSection = ''
@@ -522,7 +523,7 @@ setTimeout(() => {
   switchSection('hero')
 }, 2400)
 
-// ── AI Interactive Chat ────────────────────────────
+
 const chatToggleBtn = document.getElementById('chat-toggle-btn')
 const aiChatWindow = document.getElementById('ai-chat-window')
 const aiChatClose = document.getElementById('ai-chat-close')
@@ -532,7 +533,7 @@ const aiChatSend = document.getElementById('ai-chat-send')
 
 let conversationHistory = []
 
-// Toggle Chat Window
+
 chatToggleBtn.addEventListener('click', () => {
   aiChatWindow.classList.add('open')
   aiChatInput.focus()
@@ -546,7 +547,7 @@ function appendMessage(role, text) {
   const div = document.createElement('div')
   div.className = `chat-message ${role === 'user' ? 'user-message' : 'ai-message'}`
   
-  // Basic Markdown-to-HTML conversion for bold (**) and italics (*)
+
   let formattedText = text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -560,11 +561,11 @@ function appendMessage(role, text) {
   div.innerHTML = formattedText
   aiChatMessages.appendChild(div)
   
-  // Custom scroll behavior: Ensure the START of new AI messages is visible 
-  // without jumping past them to the very bottom of the window.
+
+
   setTimeout(() => {
     if (role === 'ai') {
-      const offset = div.offsetTop - 15; // Small margin for aesthetic sky-room
+      const offset = div.offsetTop - 15;
       aiChatMessages.scrollTo({ top: offset, behavior: 'smooth' });
     } else {
       aiChatMessages.scrollTop = aiChatMessages.scrollHeight
@@ -576,14 +577,31 @@ async function handleChatSubmit() {
   const text = aiChatInput.value.trim()
   if (!text) return
 
-  // ── RATE LIMIT CHECK ──
+
+  if (text.toLowerCase() === 'flag{h1r3_m3_plz}') {
+    appendMessage('user', text)
+    aiChatInput.value = ''
+    
+    setTimeout(() => {
+      const specialDiv = document.createElement('div')
+      specialDiv.className = 'chat-message ai-message'
+      specialDiv.style.color = '#4ade80'
+      specialDiv.style.fontFamily = 'monospace'
+      specialDiv.innerHTML = "ACCESS GRANTED.<br/><br/>System override complete.<br/>Welcome, administrator. Enjoy navigating the network."
+      aiChatMessages.appendChild(specialDiv)
+      aiChatMessages.scrollTop = aiChatMessages.scrollHeight
+    }, 600)
+    return
+  }
+
+
   if (isChatLimited) {
     chatLimitOverlay.classList.add('open');
     return;
   }
 
   const now = Date.now();
-  // Clear old timestamps
+
   while (chatMsgTimestamps.length > 0 && chatMsgTimestamps[0] < now - BLOCK_DURATION_MS) {
     chatMsgTimestamps.shift();
   }
@@ -591,7 +609,7 @@ async function handleChatSubmit() {
   chatMsgTimestamps.push(now);
   const msgCount = chatMsgTimestamps.length;
 
-  // Hard Block at 10
+
   if (msgCount >= CHAT_MAX_MESSAGES) {
     isChatLimited = true;
     chatLimitTitle.textContent = "Rate Limit Exceeded";
@@ -606,7 +624,7 @@ async function handleChatSubmit() {
     return;
   }
 
-  // Graduated Warnings at 6, 7, 8, 9
+
   if (msgCount >= CHAT_WARNING_THRESHOLD) {
     chatLimitTitle.textContent = "Nearing Limit";
     chatLimitDesc.textContent = `Warning: You are approaching the message limit (${msgCount}/${CHAT_MAX_MESSAGES}). Please slow down.`;
@@ -614,19 +632,19 @@ async function handleChatSubmit() {
     chatLimitOverlay.classList.add('open');
   }
 
-  // 1. Add user message to UI and history
+
   appendMessage('user', text)
   conversationHistory.push({ role: 'user', content: text })
   aiChatInput.value = ''
 
-  // 2. Add loading indicator
+
   const loadingDiv = document.createElement('div')
   loadingDiv.className = 'chat-message ai-message'
   loadingDiv.textContent = 'Thinking...'
   aiChatMessages.appendChild(loadingDiv)
   aiChatMessages.scrollTop = aiChatMessages.scrollHeight
 
-  // 3. Setup Fallback API for Local Dev
+
   const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
   let responseText = "Connection failed."
 
@@ -637,20 +655,7 @@ async function handleChatSubmit() {
 
       const truncatedHistory = conversationHistory.slice(-8);
       const payloadMessages = [
-        { role: 'system', content: `You are the official Professional AI Scout and Recruitment Representative for Junyu (@jjtjtyt6644).
-Your objective is to provide high-level, technical, and professional insights to CEOs, CTOs, and recruiters visiting this portfolio.
-
-Core Identity of Junyu:
-- Independent Cybersecurity Professional and Full-Stack Developer.
-- IBM Certified: Professional AI and Professional Cyber Security.
-- GitHub Identity: jjtjtyt6644 (over 17 active repositories).
-
-Professional Protocols:
-- Tone: Extremely polished, analytical, and recruitment-ready.
-- Perspective: ALWAYS speak about Junyu in the THIRD PERSON. NEVER address the user as Junyu.
-- Target Audience: High-level decision-makers and recruiters. 
-- Guardrails: Do NOT hallucinate or "get creative" with Junyu's history. 
-- IMPORTANT: If asked about something you do not know, you MUST state: "I have no relevant information on that specific topic at this time. However, you can contact Junyu specifically for more details via his GitHub (https://github.com/jjtjtyt6644) or Email (yaoprox0@gmail.com)."` },
+        { role: 'system', content: `You are the official Professional AI Scout and Recruitment Representative for Junyu (@jjtjtyt6644). Your objective is to provide high-level, technical, and professional insights to CEOs, CTOs, and recruiters visiting this portfolio. Core Identity of Junyu: Independent Cybersecurity Professional and Full-Stack Developer. IBM Certified: Professional AI and Professional Cyber Security. GitHub Identity: jjtjtyt6644 (over 17 active repositories). Professional Protocols: Tone: Extremely polished, analytical, and recruitment-ready. Perspective: ALWAYS speak about Junyu in the THIRD PERSON. NEVER address the user as Junyu. Target Audience: High-level decision-makers and recruiters. Guardrails: Do NOT hallucinate. If asked about something you do not know, state: "I have no relevant information on that specific topic at this time. However, you can contact Junyu directly via GitHub: https://github.com/jjtjtyt6644"` },
         ...truncatedHistory
       ]
 
@@ -662,7 +667,7 @@ Professional Protocols:
       const data = await res.json()
       responseText = data.choices[0].message.content.trim()
     } else {
-      // Production API call
+
       const res = await fetch('/api/converse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -677,19 +682,19 @@ Professional Protocols:
     responseText = "Sorry, my neural link is currently offline."
   }
 
-  // 4. Update UI and history with response
+
   loadingDiv.remove()
   appendMessage('ai', responseText)
   conversationHistory.push({ role: 'assistant', content: responseText })
 }
 
-// Bind Send Button & Enter Key
+
 aiChatSend.addEventListener('click', handleChatSubmit)
 aiChatInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleChatSubmit()
 })
 
-// Inject the initial welcome message via JS once when first opened
+
 let firstOpen = true;
 chatToggleBtn.addEventListener('click', () => {
   if (firstOpen) {
@@ -698,3 +703,437 @@ chatToggleBtn.addEventListener('click', () => {
   }
 });
 
+/* ═══════════════════════════════════════════════════════════════
+   DECODE TEXT EFFECT
+═══════════════════════════════════════════════════════════════ */
+function decodeText(element) {
+  const originalText = element.textContent;
+  const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  let iterations = 0;
+  
+  const interval = setInterval(() => {
+    element.textContent = originalText.split('').map((letter, index) => {
+      if(index < iterations) {
+        return originalText[index];
+      }
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join('');
+    
+    if(iterations >= originalText.length) {
+      clearInterval(interval);
+      element.textContent = originalText;
+    }
+    iterations += 1/3;
+  }, 30);
+}
+
+gsap.utils.toArray('.decode-text').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    onEnter: () => decodeText(el),
+    once: true
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   TERMINAL EXPERIENCE EFFECT
+═══════════════════════════════════════════════════════════════ */
+gsap.to('.terminal-window', {
+  opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '.terminal-section',
+    start: 'top 75%',
+    onEnter: () => startTerminalAnimation(),
+    once: true
+  }
+});
+
+let terminalStarted = false;
+function startTerminalAnimation() {
+  if(terminalStarted) return;
+  terminalStarted = true;
+  const termBody = document.getElementById('terminal-body');
+  if(!termBody) return;
+  
+  const commands = [
+    { text: "nmap localhost -p 22,80,443", type: "cmd", delay: 500 },
+    { text: "Starting Nmap 7.94 ( https://nmap.org ) at 2024", type: "out", delay: 1000 },
+    { text: "Port 22/tcp open ssh", type: "out", delay: 1500 },
+    { text: "Port 80/tcp open http", type: "out", delay: 1700 },
+    { text: "Port 443/tcp open https", type: "out", delay: 1900 },
+    { text: "cat experience.timeline", type: "cmd", delay: 2800 },
+    { text: "[2021-2024] High School - Cyber Security Focus", type: "out", delay: 3600 },
+    { text: "[2024] IBM Certified AI Builder", type: "out", delay: 4000 },
+    { text: "[2024] Independent Security Researcher", type: "out", delay: 4400 },
+    { text: "Status: Ready for new challenges.", type: "out", delay: 4800 }
+  ];
+
+  const cursor = document.createElement('span');
+  cursor.className = 'term-cursor';
+  termBody.appendChild(cursor);
+
+  commands.forEach((cmd) => {
+    setTimeout(() => {
+      cursor.remove();
+      const line = document.createElement('span');
+      line.className = cmd.type === 'cmd' ? 'term-line term-command' : 'term-line';
+      if(cmd.type === 'cmd') {
+        line.innerHTML = `root@junyu:~$ `;
+        termBody.appendChild(line);
+        let i = 0;
+        let typeInt = setInterval(() => {
+          line.innerHTML += cmd.text.charAt(i);
+          i++;
+          if(i >= cmd.text.length) {
+            clearInterval(typeInt);
+            termBody.appendChild(cursor);
+            termBody.scrollTop = termBody.scrollHeight;
+          }
+        }, 40);
+        line.style.opacity = 1;
+      } else {
+        line.innerHTML = cmd.text;
+        termBody.appendChild(line);
+        termBody.appendChild(cursor);
+        gsap.fromTo(line, {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.3});
+        termBody.scrollTop = termBody.scrollHeight;
+      }
+    }, cmd.delay);
+  });
+  
+
+  setTimeout(() => setupInteractiveTerminal(termBody, cursor), 6000);
+}
+
+function setupInteractiveTerminal(termBody, cursor) {
+  if (cursor && cursor.parentNode) cursor.remove();
+  
+  const promptWrapper = document.createElement('div');
+  promptWrapper.className = 'term-line';
+  promptWrapper.style.opacity = 1;
+  promptWrapper.style.display = 'flex';
+  
+  const promptLabel = document.createElement('span');
+  promptLabel.className = 'term-command';
+  promptLabel.textContent = 'root@junyu:~$ ';
+  promptLabel.style.marginRight = '8px';
+  
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'term-input';
+  input.autocomplete = 'off';
+  input.spellcheck = false;
+  
+  promptWrapper.appendChild(promptLabel);
+  promptWrapper.appendChild(input);
+  termBody.appendChild(promptWrapper);
+  
+  termBody.scrollTop = termBody.scrollHeight;
+  
+
+  termBody.addEventListener('click', () => input.focus());
+
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+      const val = input.value.trim();
+      input.value = '';
+      
+      const echo = document.createElement('div');
+      echo.className = 'term-line';
+      echo.style.opacity = 1;
+      echo.innerHTML = `<span class="term-command">root@junyu:~$</span> <span style="color:#eef2ff">${val}</span>`;
+      promptWrapper.before(echo);
+      
+      if(val !== '') {
+        const out = document.createElement('div');
+        out.className = 'term-line';
+        out.style.opacity = 1;
+        const lowerVal = val.toLowerCase();
+        
+        if(lowerVal === 'help') {
+           out.innerHTML = `Available commands:<br/> - whoami<br/> - clear<br/> - skills<br/> - contact<br/> - ./run_next_module.sh<br/> - date<br/> - echo<br/> - sudo`;
+        } else if (lowerVal === 'whoami') {
+           out.innerHTML = `junyu - Cyber Security & Networking Enthusiast`;
+        } else if (lowerVal === 'clear') {
+           termBody.innerHTML = '';
+        } else if (lowerVal === 'skills') {
+           out.innerHTML = `HTML, CSS, JS, Python, SQL, Bash. Specialty: PenTesting & Custom Proxies.`;
+        } else if (lowerVal === 'contact') {
+           out.innerHTML = `yaoprox0@gmail.com | github.com/jjtjtyt6644`;
+        } else if (lowerVal === 'sudo') {
+           out.innerHTML = `nice try. this incident will be reported.`;
+        } else if (lowerVal === 'ls') {
+           out.innerHTML = `experience.timeline  run_next_module.sh  secrets/`;
+        } else if (lowerVal === './run_next_module.sh' || lowerVal === 'sh run_next_module.sh') {
+           out.innerHTML = `[OK] Initiating module...<br/>[OK] Bypassing mainframe...<br/>[OK] Payload injected successfully.<br/><span style="color:#a78bfa; font-weight:bold;">Welcome to the next level.</span>`;
+        } else if (lowerVal === 'date') {
+           out.innerHTML = new Date().toString();
+        } else if (lowerVal.startsWith('echo ')) {
+           out.innerHTML = val.substring(5).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        } else if (lowerVal === 'cd secrets' || lowerVal === 'cd secrets/') {
+           out.innerHTML = `bash: cd: secrets/: Permission denied`;
+        } else if (lowerVal === 'matrix') {
+           termBody.innerHTML = '<canvas id="matrix-canvas"></canvas>';
+           startMatrixRain('matrix-canvas', termBody);
+
+           return;
+        } else {
+           out.innerHTML = `bash: ${val}: command not found`;
+        }
+        
+        if (lowerVal !== 'clear') {
+          promptWrapper.before(out);
+        } else {
+
+          termBody.appendChild(promptWrapper);
+        }
+      }
+      
+      termBody.scrollTop = termBody.scrollHeight;
+      input.focus();
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NODE NETWORK BACKGROUND
+═══════════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('network-canvas');
+if (canvas) {
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let particles = [];
+  
+  function resizeCanvas() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = canvas.parentElement.offsetHeight;
+  }
+  
+  window.addEventListener('resize', resizeCanvas);
+  setTimeout(resizeCanvas, 100);
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * 800;
+      this.vx = (Math.random() - 0.5) * 0.8;
+      this.vy = (Math.random() - 0.5) * 0.8;
+      this.size = Math.random() * 2 + 1;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+    draw() {
+      ctx.fillStyle = 'rgba(125, 211, 252, 0.5)';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  for(let i=0; i<60; i++) particles.push(new Particle());
+
+  let mouse = { x: null, y: null };
+  const contactSection = document.getElementById('contact');
+  if(contactSection) {
+    contactSection.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+    contactSection.addEventListener('mouseleave', () => {
+      mouse.x = null; mouse.y = null;
+    });
+  }
+
+  function animateNetwork() {
+    if (!width) return requestAnimationFrame(animateNetwork);
+    ctx.clearRect(0, 0, width, height);
+    
+    for(let i=0; i<particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+      
+      for(let j=i; j<particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(125, 211, 252, ${0.4 * (1 - dist/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+      
+      if (mouse.x != null) {
+        const dx = particles[i].x - mouse.x;
+        const dy = particles[i].y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 150) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(125, 211, 252, ${0.8 * (1 - dist/150)})`;
+          ctx.lineWidth = 1;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animateNetwork);
+  }
+  animateNetwork();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DECRYPT CONTACT EMAIL
+═══════════════════════════════════════════════════════════════ */
+const emailBtn = document.getElementById('btn-email');
+if (emailBtn) {
+  emailBtn.addEventListener('click', (e) => {
+    if(!emailBtn.classList.contains('decrypted')) {
+      e.preventDefault();
+      const realEmail = emailBtn.getAttribute('data-email');
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+      let iterations = 0;
+      const interval = setInterval(() => {
+        emailBtn.textContent = realEmail.split('').map((letter, index) => {
+          if(index < iterations) return realEmail[index];
+          return chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        if(iterations >= realEmail.length) {
+          clearInterval(interval);
+          emailBtn.classList.add('decrypted');
+          emailBtn.href = `mailto:${realEmail}`;
+        }
+        iterations += 1/2;
+      }, 30);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KONAMI CODE -> RED TEAM MODE
+═══════════════════════════════════════════════════════════════ */
+let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let konamiPosition = 0;
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === konamiCode[konamiPosition]) {
+    konamiPosition++;
+    if (konamiPosition === konamiCode.length) {
+      document.body.classList.toggle('red-team-mode');
+      if(document.body.classList.contains('red-team-mode')) {
+        appendMessage('ai', "WARNING: RED TEAM MODE ACTIVATED. NEURAL LINK COMPROMISED. ALL SYSTEMS INVERTED.");
+        document.getElementById('ai-chat-window').classList.add('open');
+      } else {
+        appendMessage('ai', "SYSTEM RESTORED. Resuming standard operations.");
+      }
+      konamiPosition = 0;
+    }
+  } else {
+    konamiPosition = 0;
+  }
+});
+
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MATRIX RAIN TERMINAL LOGIC
+═══════════════════════════════════════════════════════════════ */
+function startMatrixRain(canvasId, container) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = container.clientWidth;
+  canvas.height = 400;
+  container.style.overflow = 'hidden';
+  
+  const chars = '01ABCDEFXYZ@#$%^&*()';
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = [];
+  for(let x=0; x < columns; x++) drops[x] = 1;
+  const rainColor = document.body.classList.contains('red-team-mode') ? '#ef4444' : '#4ade80';
+  
+  let rainInterval = setInterval(() => {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = rainColor;
+    ctx.font = fontSize + 'px monospace';
+    
+    for(let i=0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+    }
+  }, 33);
+  
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.style.position = 'absolute';
+    hint.style.bottom = '10px';
+    hint.style.left = '10px';
+    hint.style.color = 'white';
+    hint.style.zIndex = 10;
+    hint.innerText = '[Type clear or press Ctrl+C to escape Matrix]';
+    container.appendChild(hint);
+  }, 2000);
+  
+  const pWrapper = document.createElement('div');
+  pWrapper.className = 'term-line';
+  pWrapper.style.position = 'absolute';
+  pWrapper.style.bottom = '30px';
+  pWrapper.style.left = '10px';
+  pWrapper.style.zIndex = 10;
+  
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'term-input';
+  inp.style.width = '100px';
+  
+  pWrapper.appendChild(inp);
+  container.appendChild(pWrapper);
+  
+  inp.focus();
+  
+  function destroyMatrix() {
+    clearInterval(rainInterval);
+    container.style.overflow = 'auto';
+    container.innerHTML = '';
+    setupInteractiveTerminal(container, null);
+    document.removeEventListener('keydown', handleGlobalKey);
+  }
+
+
+  inp.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+      const val = inp.value.trim().toLowerCase();
+      if(val === 'clear' || val === 'exit') {
+        destroyMatrix();
+      } else {
+        inp.value = '';
+      }
+    } else if (e.key === 'c' && e.ctrlKey) {
+      destroyMatrix();
+    }
+  });
+
+
+  function handleGlobalKey(e) {
+    if (e.key === 'c' && e.ctrlKey) {
+      destroyMatrix();
+    }
+  }
+  document.addEventListener('keydown', handleGlobalKey);
+}
