@@ -326,20 +326,58 @@ async function fetchElaboration(sectionId) {
 
   const cleanContext = SECTION_CONTEXT[sectionId] || "Junyu's Portfolio space.";
 
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ context: cleanContext })
-    })
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  let result = "";
 
-    const data = await response.json()
-    if (data.choices && data.choices.length > 0) {
-      const result = data.choices[0].message.content.trim()
-      CACHED_RESPONSES[sectionId] = resul
-      return result
+  try {
+    if (isLocal) {
+      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+      if (!apiKey) throw new Error("Local API key missing.");
+
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            {
+              role: 'system',
+              content: "You are a professional, knowledgeable AI guide for Junyu's cybersecurity portfolio. Read the exact context of the section the user is looking at and provide a concise, professional 1-2 sentence elaboration. Be direct and analytical. Limit yourself to a maximum of one emoji per response. Do not use quotes, filler intros, overly hyped language, or ask questions."
+            },
+            {
+              role: 'user',
+              content: `The user is looking at this section on my portfolio right now:\n${cleanContext}`
+            }
+          ],
+          max_tokens: 80,
+          temperature: 0.4
+        })
+      });
+      const data = await res.json();
+      if (data.choices && data.choices.length > 0) {
+        result = data.choices[0].message.content.trim();
+      }
+    } else {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context: cleanContext })
+      });
+
+      const data = await response.json();
+      if (data.choices && data.choices.length > 0) {
+        result = data.choices[0].message.content.trim();
+      }
     }
-    return "The server encountered an error while processing context."
+
+    if (result) {
+      CACHED_RESPONSES[sectionId] = result;
+      return result;
+    }
+    return "The server encountered an error while processing context.";
   } catch (err) {
     console.error('API Error:', err)
     return "The secure AI bridge is currently offline."
