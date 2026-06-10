@@ -29,25 +29,6 @@ This project is a professional showcase of cybersecurity expertise, networking p
 - Ai-Vision: An AI assistant that provides real-time visual analysis of browser tabs.
 - Proxy: A lightweight HTTP proxy server engineered for traffic routing and security interception.
 
-## Setup and Installation
-
-1. Install dependencies:
-   npm install
-
-2. Configure environment variables:
-   Create a .env file in the root directory and add your Groq API key:
-   VITE_GROQ_API_KEY=your_api_key_here
-
-3. Start development server:
-   npm run dev
-
-4. Build for production:
-   npm run build
-
-## Technical Details
-
-The portfolio uses an intersection-based section tracking system that shoots a ray-cast to the center of the viewport to determine precisely which content the user is focused on. This data is then formatted and passed to the Groq LLM to generate professional, context-specific commentary.
-
 ## Contact
 
 - Email: yaoprox0@gmail.com
