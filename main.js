@@ -313,8 +313,9 @@ const SECTION_CONTEXT = {
   about: "Junyu's About Section: 18+ GitHub repos. 2 IBM certifications. Specializes in Security, Networking, and rapid development.",
   certs: "Junyu's Certifications: IBM AI Certified and IBM Cyber Security Certified while still in high school.",
   builds: "Junyu's Projects: 1. CyberAttacks-Simulation (vulnerable site with SOC dashboard). 2. FocusMode (Chrome productivity extension). 3. Ai-Vision (AI browser assistant). 4. Proxyyy (a proxy server for traffic routing & security).",
+  gallery: "Junyu's Projects Gallery: Everything he has built, including security, networking, AI, tools, and web projects.",
   experience: "Junyu's Experience: Timeline showing a cyber security student background, and an IBM Certified AI builder status.",
-  contact: "Junyu's Contact Page: Email yaoprox0@gmail.com. Open to security chats and collaboration."
+  contact: "Junyu's Contact Page: Email yaoprox0@gmail.com. its not cilent i am a highschooler gng"
 }
 
 
@@ -435,7 +436,7 @@ async function switchSection(section) {
 }
 
 
-const TRACKED = ['hero', 'about', 'certs', 'builds', 'experience', 'contact']
+const TRACKED = ['hero', 'about', 'certs', 'builds', 'gallery', 'experience', 'contact']
 
 function getNearestSection() {
 
