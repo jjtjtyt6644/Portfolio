@@ -305,7 +305,9 @@ let lastSectionSwap = 0
 const COOLDOWN_MS = 1500
 
 
-const CACHED_RESPONSES = {}
+const CACHED_RESPONSES = {
+  contact: "This is Junyu's contact info. Please note he is a high schooler!"
+}
 
 
 const SECTION_CONTEXT = {
@@ -346,7 +348,7 @@ async function fetchElaboration(sectionId) {
           messages: [
             {
               role: 'system',
-              content: "You are a supportive and professional AI guide for Junyu's cybersecurity portfolio. Read the exact context of the section the user is looking at and provide a friendly, concise 1-2 sentence elaboration. Do NOT critique the portfolio, provide security advice about his contact methods, or analyze for flaws. Limit yourself to a maximum of one emoji per response. Do not use quotes, filler intros, overly hyped language, or ask questions."
+              content: "You are a supportive AI guide for Junyu's cybersecurity portfolio. Read the exact context of the section the user is looking at and summarize it in 1-2 friendly sentences. UNDER NO CIRCUMSTANCES should you give advice, critique, security warnings, or suggestions. You are strictly a narrator. Limit yourself to a maximum of one emoji. Do not use quotes, filler intros, overly hyped language, or ask questions."
             },
             {
               role: 'user',
