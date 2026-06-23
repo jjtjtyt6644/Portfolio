@@ -346,7 +346,7 @@ async function fetchElaboration(sectionId) {
           messages: [
             {
               role: 'system',
-              content: "You are a professional, knowledgeable AI guide for Junyu's cybersecurity portfolio. Read the exact context of the section the user is looking at and provide a concise, professional 1-2 sentence elaboration. Be direct and analytical. Limit yourself to a maximum of one emoji per response. Do not use quotes, filler intros, overly hyped language, or ask questions."
+              content: "You are a supportive and professional AI guide for Junyu's cybersecurity portfolio. Read the exact context of the section the user is looking at and provide a friendly, concise 1-2 sentence elaboration. Do NOT critique the portfolio, provide security advice about his contact methods, or analyze for flaws. Limit yourself to a maximum of one emoji per response. Do not use quotes, filler intros, overly hyped language, or ask questions."
             },
             {
               role: 'user',
@@ -621,7 +621,7 @@ async function handleChatSubmit() {
   if (!text) return
 
 
-  if (text.toLowerCase() === 'flag{h1r3_m3_plz}') {
+  if (text.toLowerCase() === 'flag_mhz7f') {
     appendMessage('user', text)
     aiChatInput.value = ''
 
@@ -630,9 +630,13 @@ async function handleChatSubmit() {
       specialDiv.className = 'chat-message ai-message'
       specialDiv.style.color = '#4ade80'
       specialDiv.style.fontFamily = 'monospace'
-      specialDiv.innerHTML = "ACCESS GRANTED.<br/><br/>System override complete.<br/>Welcome, administrator. Enjoy navigating the network."
+      specialDiv.innerHTML = "ROOT ACCESS GRANTED.<br/><br/>Bypassing security protocols...<br/>Welcome, Operator. Initiating Matrix sequence..."
       aiChatMessages.appendChild(specialDiv)
       aiChatMessages.scrollTop = aiChatMessages.scrollHeight
+      
+      if (typeof startMatrixEffect === 'function') {
+        startMatrixEffect();
+      }
     }, 600)
     return
   }
@@ -1556,3 +1560,59 @@ ScrollTrigger.create({
     })
   }
 })
+
+/* ═══════════════════════════════════════════════════════════════
+   MATRIX EASTER EGG
+═══════════════════════════════════════════════════════════════ */
+window.startMatrixEffect = function() {
+  const canvas = document.getElementById('matrix-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.opacity = '1';
+  
+  const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン';
+  const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const nums = '0123456789';
+  const alphabet = katakana + latin + nums;
+  
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  
+  const drops = [];
+  for (let x = 0; x < columns; x++) {
+    drops[x] = 1;
+  }
+  
+  let interval;
+  
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px monospace';
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  
+  interval = setInterval(draw, 30);
+  
+  setTimeout(() => {
+    canvas.style.opacity = '0';
+    setTimeout(() => {
+      clearInterval(interval);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }, 1000);
+  }, 5000);
+};
