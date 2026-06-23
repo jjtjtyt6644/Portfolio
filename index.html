@@ -424,10 +424,19 @@
       <button class="ai-chat-close" id="ai-chat-close">✕</button>
     </div>
     <div class="ai-chat-messages" id="ai-chat-messages" data-lenis-prevent>
-      <div class="chat-message ai-message" style="color: #ef4444; font-size: 0.85rem; border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1);">
-        <strong>Disclaimer:</strong> This AI mascot may occasionally hallucinate or provide inaccurate information. Please verify any critical details.
+      <div class="ai-disclaimer">
+        <svg class="disclaimer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div class="disclaimer-text">
+          <strong>System Notice:</strong> This AI model may exhibit hallucinated behavior. Verification of data with
+          Junyu is reccommended.
+        </div>
       </div>
-      <!-- Messages injected via JS for consistency -->
+
     </div>
     <div class="ai-chat-input-area">
       <input type="text" id="ai-chat-input" placeholder="Query agent..." autocomplete="off" />

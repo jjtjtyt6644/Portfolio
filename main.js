@@ -575,11 +575,15 @@ let conversationHistory = []
 
 chatToggleBtn.addEventListener('click', () => {
   aiChatWindow.classList.add('open')
+  mascotChar.classList.add('peering')
+  mascotBubble.style.opacity = '0'
   aiChatInput.focus()
 })
 
 aiChatClose.addEventListener('click', () => {
   aiChatWindow.classList.remove('open')
+  mascotChar.classList.remove('peering')
+  mascotBubble.style.opacity = '1'
 })
 
 function appendMessage(role, text) {

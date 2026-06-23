@@ -573,6 +573,16 @@ a, button { text-decoration:none; font-family:inherit; cursor:pointer; }
   align-items: flex-end;     /* both anchored to bottom */
   gap: 1rem;
   pointer-events: none;
+  transform: translateY(220px);
+  animation: mascotEntrance 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes mascotEntrance {
+  0% { transform: translateY(220px); }
+  25% { transform: translateY(110px); } /* Peering */
+  60% { transform: translateY(110px); } /* Stay peering */
+  100% { transform: translateY(0); }
 }
 
 /* ── Speech Bubble ───────────────────── */
@@ -666,10 +676,17 @@ a, button { text-decoration:none; font-family:inherit; cursor:pointer; }
   height: 210px;
   position: relative;
   cursor: pointer;
+  bottom: 0;
+  transition: bottom 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mascot-char > img, .mascot-char > .mascot-placeholder {
   /* gentle idle float */
   animation: mascotFloat 4s ease-in-out infinite;
 }
-.mascot-char:hover { animation-play-state: paused; }
+.mascot-char.peering {
+  bottom: 460px;
+}
+.mascot-char:hover > img, .mascot-char:hover > .mascot-placeholder { animation-play-state: paused; }
 /* slight lift on hover */
 .mascot-char:hover .mascot-placeholder,
 .mascot-char:hover img {
@@ -936,6 +953,40 @@ a, button { text-decoration:none; font-family:inherit; cursor:pointer; }
   align-self: flex-end; background: var(--text); color: var(--bg);
   border-bottom-right-radius: 4px; font-weight: 600;
   margin-right: 0; margin-left: auto; /* Forces right alignment */
+}
+
+.ai-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-left: 3px solid #ef4444;
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  color: #fca5a5;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+  animation: disclaimer-pulse 3s infinite alternate;
+  width: 100%;
+}
+.ai-disclaimer .disclaimer-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #ef4444;
+  margin-top: 0.1rem;
+}
+.ai-disclaimer strong {
+  color: #ef4444;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+@keyframes disclaimer-pulse {
+  0% { box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.15); }
 }
 
 .ai-chat-input-area {
