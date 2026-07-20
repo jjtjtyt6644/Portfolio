@@ -305,6 +305,19 @@ let lastSectionSwap = 0
 const COOLDOWN_MS = 1500
 
 
+// Sections in PINNED_RESPONSES are NEVER overridden by the API or cleared by mascot clicks.
+// Arrays cycle through on each mascot click.
+const PINNED_RESPONSES = {
+  experience: [
+    "This is a fake simulated terminal — not real! 😄 Try: help · ls · cat about.txt · whoami · pwd",
+    "Psst, this terminal is just for show 🖥️ Try running: ./run_next_module.sh or type matrix for a surprise!",
+    "Explore the fake filesystem! Try: cd secrets (if you dare) or cat about.txt to learn more about Junyu.",
+    "Try: sudo — see what happens when you're not in the sudoers file 👀 Or echo anything you like!",
+    "Type clear to wipe the terminal, or ls to list files. It's a playground — nothing will break 🙂"
+  ]
+}
+const PINNED_INDEXES = {}
+
 const CACHED_RESPONSES = {
   contact: "This is Junyu's contact info. Please note he is a high schooler!"
 }
@@ -316,12 +329,23 @@ const SECTION_CONTEXT = {
   certs: "Junyu's Certifications: IBM AI Certified and IBM Cyber Security Certified while still in high school.",
   builds: "Junyu's Projects: 1. CyberAttacks-Simulation (vulnerable site with SOC dashboard). 2. FocusMode (Chrome productivity extension). 3. Ai-Vision (AI browser assistant). 4. Proxyyy (a proxy server for traffic routing & security).",
   gallery: "Junyu's Projects Gallery: Everything he has built, including security, networking, AI, tools, and web projects.",
-  experience: "Junyu's Experience: Timeline showing a cyber security student background, and an IBM Certified AI builder status.",
-  contact: "Junyu's Contact Page: Email yaoprox0@gmail.com. its not cilent i am a highschooler gng"
+  experience: "Fake interactive terminal — try commands: help, ls, cat about.txt, whoami, pwd, echo [text], sudo, clear, ./run_next_module.sh, matrix.",
+  contact: "Junyu's Contact Page. Please note he is a high schooler!"
 }
 
 
 async function fetchElaboration(sectionId) {
+
+  // Always return pinned responses — never call the API for these sections
+  if (PINNED_RESPONSES[sectionId]) {
+    const msgs = PINNED_RESPONSES[sectionId]
+    if (Array.isArray(msgs)) {
+      const idx = (PINNED_INDEXES[sectionId] || 0) % msgs.length
+      PINNED_INDEXES[sectionId] = idx + 1
+      return msgs[idx]
+    }
+    return msgs
+  }
 
   if (CACHED_RESPONSES[sectionId]) {
     return CACHED_RESPONSES[sectionId]
@@ -522,7 +546,10 @@ mascotChar.addEventListener('click', async () => {
   }
 
 
-  CACHED_RESPONSES[activeSection] = null;
+  // Don't clear pinned sections — they should never re-fetch from the API
+  if (!PINNED_RESPONSES[activeSection]) {
+    CACHED_RESPONSES[activeSection] = null;
+  }
 
 
   gsap.timeline()
